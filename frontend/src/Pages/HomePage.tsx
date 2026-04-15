@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   heroStats,
+  imageCards,
   productOptions,
   productOverview,
 } from "../data/siteContent";
@@ -19,6 +20,7 @@ export function HomePage() {
   const [activeTestimonialIndex, setActiveTestimonialIndex] = useState(0);
   const [visibleTestimonialsCount, setVisibleTestimonialsCount] = useState(1);
   const [carouselResetKey, setCarouselResetKey] = useState(0);
+  const [activeHeroImageIndex, setActiveHeroImageIndex] = useState(0);
   const [itemPrices, setItemPrices] = useState<Record<string, number>>(
     Object.fromEntries(
       productOptions.map((productOption) => [
@@ -119,6 +121,24 @@ export function HomePage() {
     };
   }, [testimonialItems, visibleTestimonialsCount, carouselResetKey]);
 
+  useEffect(() => {
+    if (imageCards.length <= 1) {
+      return;
+    }
+
+    // Rotate through the product photos in the hero card so visitors can
+    // see each view without leaving the home page.
+    const intervalId = window.setInterval(() => {
+      setActiveHeroImageIndex((currentIndex) =>
+        currentIndex + 1 >= imageCards.length ? 0 : currentIndex + 1
+      );
+    }, 3200);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
   const visibleTestimonials = testimonialItems.slice(
     activeTestimonialIndex,
     activeTestimonialIndex + visibleTestimonialsCount
@@ -130,6 +150,7 @@ export function HomePage() {
   const activePageIndex = Math.floor(
     activeTestimonialIndex / visibleTestimonialsCount
   );
+  const activeHeroImage = imageCards[activeHeroImageIndex] ?? imageCards[0];
 
   function handleTestimonialPageChange(index: number) {
     setActiveTestimonialIndex(index * visibleTestimonialsCount);
@@ -186,8 +207,16 @@ export function HomePage() {
             Lead: ${(itemPrices["4 Lead StemiGlide"] ?? 29).toFixed(2)}
           </div>
           <div className="render-card">
-            <img src="public/6leadin.png" alt="Stemi" />
+            <img
+              key={activeHeroImage.image}
+              className="hero-rotating-image"
+              src={activeHeroImage.image}
+              alt={activeHeroImage.title}
+            />
           </div>
+          <Link className="button button-primary hero-buy-button" to="/contact">
+            Buy Now
+          </Link>
         </div>
       </section>
 
