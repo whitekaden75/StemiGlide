@@ -7,7 +7,11 @@ import {
 } from "../data/siteContent";
 import { SectionHeading } from "../components/SectionHeading";
 import { fetchJson } from "../lib/api";
-import type { ApiCollectionResponse, Testimonial } from "../types/models";
+import type {
+  ApiCollectionResponse,
+  ItemPriceCollectionResponse,
+  Testimonial,
+} from "../types/models";
 
 export function HomePage() {
   const [testimonialItems, setTestimonialItems] = useState<Testimonial[]>([]);
@@ -15,20 +19,43 @@ export function HomePage() {
   const [activeTestimonialIndex, setActiveTestimonialIndex] = useState(0);
   const [visibleTestimonialsCount, setVisibleTestimonialsCount] = useState(1);
   const [carouselResetKey, setCarouselResetKey] = useState(0);
+  const [itemPrices, setItemPrices] = useState<Record<string, number>>(
+    Object.fromEntries(
+      productOptions.map((productOption) => [
+        productOption.name,
+        productOption.defaultPrice,
+      ])
+    )
+  );
 
   useEffect(() => {
     let cancelled = false;
 
-    async function loadTestimonials() {
+    async function loadHomePageData() {
       try {
-        // Home page reviews are loaded from the backend so approved testimonials
-        // can change without editing frontend code.
-        const response = await fetchJson<ApiCollectionResponse<Testimonial>>(
-          "/api/testimonials"
-        );
+        // Home page reviews and price badges are loaded from the backend so
+        // approved testimonials and admin-set prices can change without a new deploy.
+        const [testimonialResponse, itemPriceResponse] = await Promise.all([
+          fetchJson<ApiCollectionResponse<Testimonial>>("/api/testimonials"),
+          fetchJson<ItemPriceCollectionResponse>("/api/inquiries/item-prices"),
+        ]);
 
         if (!cancelled) {
-          setTestimonialItems(response.data);
+          setTestimonialItems(testimonialResponse.data);
+          setItemPrices(
+            itemPriceResponse.data.reduce<Record<string, number>>(
+              (priceMap, itemPrice) => {
+                priceMap[itemPrice.productName] = Number(itemPrice.itemPrice);
+                return priceMap;
+              },
+              Object.fromEntries(
+                productOptions.map((productOption) => [
+                  productOption.name,
+                  productOption.defaultPrice,
+                ])
+              )
+            )
+          );
           setTestimonialError("");
         }
       } catch (error) {
@@ -42,7 +69,7 @@ export function HomePage() {
       }
     }
 
-    void loadTestimonials();
+    void loadHomePageData();
 
     return () => {
       cancelled = true;
@@ -113,16 +140,17 @@ export function HomePage() {
     <div className="page-stack">
       <section className="reviews-banner card">
         <div className="reviews-banner-copy">
-          <p className="eyebrow">Reviews</p>
-          <h2>Want to leave feedback about StemiGlide?</h2>
+          <p className="eyebrow">Product Details</p>
+          <h2>See how StemiGlide is built for faster field setup.</h2>
           <p className="section-description">
-            Use the reviews page to submit product feedback from EMTs, first
-            responders, or training teams.
+            View the product details page to understand the cable-management
+            problem, the design approach, and the workflow benefits for EMS
+            crews.
           </p>
         </div>
         <div className="reviews-banner-action">
-          <Link className="button button-primary" to="/reviews">
-            Go To Reviews
+          <Link className="button button-primary" to="/details">
+            View Product Details
           </Link>
         </div>
       </section>
@@ -154,8 +182,8 @@ export function HomePage() {
 
         <div className="hero-visual card">
           <div className="product-badge">
-            6 Node Lead: ${productOptions[0].defaultPrice.toFixed(2)} | 4 Node
-            Lead: ${productOptions[1].defaultPrice.toFixed(2)}
+            6 Lead: ${(itemPrices["6 Lead StemiGlide"] ?? 39).toFixed(2)} | 4
+            Lead: ${(itemPrices["4 Lead StemiGlide"] ?? 29).toFixed(2)}
           </div>
           <div className="render-card">
             <img src="public/6leadin.png" alt="Stemi" />
