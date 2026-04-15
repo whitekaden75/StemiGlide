@@ -40,13 +40,13 @@ export function DemoPage() {
                 onClick={() => setIsVideoOpen(true)}
                 aria-label="Play introduction video">
                 <img
-                  src="/DadIntroThumbnail.png"
+                  src="/StemiClosed.png"
                   alt="Preview of EMT introduction video"
                 />
                 <span className="play-button">▶</span>
               </button>
             ) : (
-              <video controls autoPlay playsInline>
+              <video controls autoPlay playsInline poster="/StemiClosed.png">
                 <source src="/DadIntro.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>

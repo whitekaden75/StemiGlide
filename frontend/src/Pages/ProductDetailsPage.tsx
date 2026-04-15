@@ -20,10 +20,14 @@ export function ProductDetailsPage() {
 
         <div className="image-grid">
           {imageCards.map((card, index) => (
-            <div key={index} className="card">
-              <img src={card.image} alt={card.title} />
-              <h3>{card.title}</h3>
-              <p>{card.caption}</p>
+            <div key={index} className="image-card">
+              <div className="image-card-media">
+                <img src={card.image} alt={card.title} />
+              </div>
+              <div className="image-card-copy">
+                <h3>{card.title}</h3>
+                <p>{card.caption}</p>
+              </div>
             </div>
           ))}
         </div>

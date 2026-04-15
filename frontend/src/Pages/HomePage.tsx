@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { heroStats, productOverview } from "../data/siteContent";
+import {
+  heroStats,
+  productOptions,
+  productOverview,
+} from "../data/siteContent";
 import { SectionHeading } from "../components/SectionHeading";
 import { fetchJson } from "../lib/api";
 import type { ApiCollectionResponse, Testimonial } from "../types/models";
@@ -137,7 +141,7 @@ export function HomePage() {
               View Demo
             </Link>
           </div>
-
+          <br />
           <div className="stats-grid">
             {heroStats.map((stat) => (
               <article className="stat-card" key={stat.label}>
@@ -149,7 +153,10 @@ export function HomePage() {
         </div>
 
         <div className="hero-visual card">
-          <div className="product-badge">{productOverview.priceLabel}</div>
+          <div className="product-badge">
+            6 Node Lead: ${productOptions[0].defaultPrice.toFixed(2)} | 4 Node
+            Lead: ${productOptions[1].defaultPrice.toFixed(2)}
+          </div>
           <div className="render-card">
             <img src="public/6leadin.png" alt="Stemi" />
           </div>
@@ -160,22 +167,27 @@ export function HomePage() {
         <article className="card accent-card">
           <SectionHeading
             eyebrow="Why It Exists"
-            title="The project is centered on a real EMT problem."
-            description="EKG wires are easy to tangle. In emergency care, that creates friction exactly where crews need speed and clarity."
+            title="Tangled EKG leads create avoidable delays in emergency care."
+            description="EMS crews work in fast, high-pressure environments where rapid cardiac monitoring matters. When EKG cables are stored as a twisted bundle, setup becomes slower, organization becomes harder, and repeated tangling can shorten cable life through unnecessary strain and wear."
           />
         </article>
 
         <article className="card">
           <SectionHeading
             eyebrow="Built For The Field"
-            title="Professional enough for a class project and a real product pitch."
-            description="The site explains the problem, shows the workflow, and gives departments or buyers a direct way to contact you about pricing and pilot interest."
+            title="StemiGlide is designed to keep leads separated, organized, and ready for use."
+            description="By giving each EKG lead a controlled position during storage and transport, StemiGlide reduces tangling, speeds deployment, and helps EMS providers move from retrieval to patient application with less wasted time."
           />
           <div className="detail-list">
-            <p>Clear multi-page product story</p>
-            <p>Responsive front end in React + TypeScript</p>
-            <p>Backend-ready inquiry and testimonial flow</p>
-            <p>PostgreSQL-backed API support</p>
+            <p>
+              Faster access to organized leads during urgent patient assessment
+            </p>
+            <p>
+              Cleaner storage inside EMS bags, drawers, and equipment
+              compartments
+            </p>
+            <p>Less cable twisting, bending, and wear over repeated use</p>
+            <p>More reliable setup for crews who need speed and consistency</p>
           </div>
         </article>
       </section>
