@@ -6,6 +6,7 @@ import { apiRouter } from "./routes/index.js";
 
 export function createApp() {
   const app = express();
+  app.set("trust proxy", true);
 
   app.use(
     cors({
@@ -20,6 +21,7 @@ export function createApp() {
       status: "ok",
       docs: {
         health: "/api/health",
+        ip: "/api/health/ip",
         testimonials: "/api/testimonials",
         inquiries: "/api/inquiries",
       },

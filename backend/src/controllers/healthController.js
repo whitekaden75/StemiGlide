@@ -14,3 +14,17 @@ export async function getHealth(_request, response, next) {
     next(error);
   }
 }
+
+export function getRequestIp(request, response) {
+  const forwardedFor = request.headers["x-forwarded-for"];
+
+  response.json({
+    ok: true,
+    ip: request.ip,
+    forwardedFor: Array.isArray(forwardedFor)
+      ? forwardedFor.join(", ")
+      : (forwardedFor ?? ""),
+    remoteAddress: request.socket.remoteAddress ?? "",
+    timestamp: new Date().toISOString(),
+  });
+}
