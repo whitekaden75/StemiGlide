@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 import { env } from "./config/env.js";
 import { errorHandler, notFoundHandler } from "./middleware/errors.js";
+import { requestLogger } from "./middleware/requestLogger.js";
 import { apiRouter } from "./routes/index.js";
 
 export function createApp() {
@@ -13,6 +14,7 @@ export function createApp() {
       origin: env.clientOrigin,
     }),
   );
+  app.use(requestLogger);
   app.use(express.json());
 
   app.get("/", (_request, response) => {
