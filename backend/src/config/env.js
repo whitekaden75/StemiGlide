@@ -12,6 +12,7 @@ export const env = {
   dbUser: process.env.DB_USER ?? "postgres",
   dbPassword: process.env.DB_PASSWORD ?? "",
   dbSsl: process.env.DB_SSL === "true",
+  dbConnectionTimeoutMs: Number(process.env.DB_CONNECTION_TIMEOUT_MS ?? 5000),
   stripeSecretKey: process.env.STRIPE_SECRET_KEY ?? "",
   stripeSuccessUrl:
     process.env.STRIPE_SUCCESS_URL ??

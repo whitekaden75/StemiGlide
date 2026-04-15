@@ -10,4 +10,5 @@ export const db = new Pool({
   user: env.dbUser,
   password: env.dbPassword,
   ssl: env.dbSsl ? { rejectUnauthorized: false } : false,
+  connectionTimeoutMillis: env.dbConnectionTimeoutMs,
 });
