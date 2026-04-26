@@ -8,12 +8,13 @@ import { DemoPage } from "./Pages/DemoPage";
 import { ContactPage } from "./Pages/ContactPage";
 import { SuccessPage } from "./Pages/SuccessPage";
 import { CancelPage } from "./Pages/CancelPage";
-
+import EldersQuorum from "./Pages/EldersQuorum";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/EldersQuorum" element={<EldersQuorum />} />
         {/* Shared site chrome stays around the page routes below. */}
         <Route element={<SiteLayout />}>
           <Route path="/" element={<HomePage />} />
